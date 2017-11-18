@@ -15,7 +15,7 @@ SC_MODULE (nand)
 		Z.write(!(A.read() && B.read()));
 	}
 
-	SC_CTOR(nand)
+	SC_CTOR(nand) : A("A"), B("B"), Z("Z")
 	{
 		SC_METHOD(do_nand);
 		sensitive << A << B;
