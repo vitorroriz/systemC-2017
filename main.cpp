@@ -6,10 +6,12 @@
 int sc_main(int argc, char* argv[])
 {
 	sc_signal<bool> sigA, sigB, sigZ;
+	sc_clock Clk;
 
 	stim Stim1("Stimulus");
 	Stim1.A(sigA);
 	Stim1.B(sigB);
+	Stim1.Clk(Clk);
 
 	exor DUT("exor");
 	DUT.A(sigA);
@@ -20,6 +22,7 @@ int sc_main(int argc, char* argv[])
 	mon.A(sigA);
 	mon.B(sigB);
 	mon.Z(sigZ);
+	mon.Clk(Clk);
 
 /* Adding Waveform tracing */
 	sc_trace_file* Tf;
@@ -29,6 +32,7 @@ int sc_main(int argc, char* argv[])
 	sc_trace(Tf, sigA, "A");
 	sc_trace(Tf, sigB, "B");
 	sc_trace(Tf, sigZ, "Z");
+	sc_trace(Tf, Clk, "Clk");
 
 	sc_start();  // run forever
 	sc_close_vcd_trace_file(Tf);
