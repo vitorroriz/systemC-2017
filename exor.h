@@ -9,11 +9,11 @@ using namespace std;
 SC_MODULE(exor)
 {
 
-    sc_in<bool>	A;
-    sc_in<bool>	B;
+	sc_in<bool>	A;
+	sc_in<bool>	B;
 	sc_out<bool>	Z;
 	
-    sc_signal<bool>	h1, h2, h3;
+	sc_signal<bool>	h1, h2, h3;
 
 	nand n_a, n_b, n_c, n_d;
 
