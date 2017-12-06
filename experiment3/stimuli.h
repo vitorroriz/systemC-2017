@@ -1,0 +1,26 @@
+#ifndef STIMULI_H
+#define STIMULI_H
+#include <systemc.h>
+#include <string>
+
+SC_MODULE(stimuli)
+{
+public:
+    sc_in<bool> clk;
+    sc_out<char> output;
+    SC_HAS_PROCESS(stimuli);
+    stimuli(const sc_module_name &name) : sc_module(name)
+    {
+        sequence = "CAAGATGCCATTGTCCCCCGGCCTCCTGCTGCTGCTGCTCTCCGGGGCCACGGCCACCGCTGCCCTGCCCCTGGAGGGTGGCCCCACCGGCCGAGACAGCGAGCATATGCAGGAAAGCGGCAGGAATAAGGAAAAGCAGCCTCCTGACTTTCCTCGCTTGGTGGTTTGAGTGGACCTCCCAGGCCAGTGCCGGGCCCCTCATAGGAGAGGAAGCTCGGGAGGTGGCCAGGCGGCAGGAAGGCGCACCCCCCCAGCAATCCGCGCGCCGGGACAGAATGCCCTGCAGGAACTTCTTCTGGAAGACCTTCTCCTCCTGCAAATAAAACCTCACCCATGAATGCTCACGCAAGTTTAATTACAGACCTGAA";
+        counter = 0;
+        SC_METHOD(process);
+        sensitive << clk.pos();
+    }
+
+private:
+    std::string sequence;
+    void process();
+    unsigned int counter;
+};
+
+#endif // STIMULI_H
