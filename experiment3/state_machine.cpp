@@ -20,6 +20,7 @@ void stateMachine::process()
             break;
 		}
 		break;
+
 	case G:
 		switch(input)
 		{
@@ -35,6 +36,7 @@ void stateMachine::process()
 			break;
 		}
 		break;
+
 	case GA:
 		switch(input)
 		{
@@ -50,6 +52,7 @@ void stateMachine::process()
 			break;
 		}
 		break;
+
 	case GAA:
 		switch(input)
 		{
@@ -60,12 +63,16 @@ void stateMachine::process()
 			break;
 		case 'G':
 			state = GAAG;
-            std::cout << "Sequence GAAG detected" << std::endl;
 			break;
 		}
 		break;
+
 	case GAAG:
-		switch(input)
+        pattern_counter++;
+        std::cout << "Sequence GAAG detected at string position [" << pattern_pos << "]" << std::endl;
+        std::cout << "Number of occurences = [" << pattern_counter << "]" << std::endl;
+        std::cout << "Frequency of occurences = ["  << (float(pattern_counter)/float(pattern_pos)) << "] sequences/nucleotide bases" << std::endl << std::endl;
+        switch(input)
 		{
 		case 'A':
 		case 'C':
@@ -78,4 +85,6 @@ void stateMachine::process()
 		}
 		break;
 	}
+
+    pattern_pos++;
 }

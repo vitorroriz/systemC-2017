@@ -20,6 +20,8 @@ public:
 private:
 	enum base {Start,G,GA,GAA,GAAG};
 	base state;
+    unsigned int pattern_pos = 0;
+    unsigned int pattern_counter = 0;
 	void process();
 };
 #endif // FSM_H
