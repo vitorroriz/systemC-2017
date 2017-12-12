@@ -3,7 +3,6 @@
 Place::Place()
 {
     tokens = 0;
-
 }
 
 void Place::addTokens(unsigned int n)
@@ -20,5 +19,3 @@ unsigned int Place::testTokens()
 {
     return this->tokens;
 }
-
-
