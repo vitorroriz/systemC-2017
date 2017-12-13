@@ -2,18 +2,19 @@
 #define TRANSITION
 #include <systemc.h>
 #include "place.h"
+
+template<unsigned int N=1, unsigned int M=1>
 SC_MODULE(transition)
 {
 public:
-    sc_port <placeInterface> in;
-    sc_port <placeInterface> out;
+    sc_port <placeInterface, N, SC_ALL_BOUND> in;
+    sc_port <placeInterface, M, SC_ALL_BOUND> out;
     SC_HAS_PROCESS(transition);
     transition(const sc_module_name &name) : sc_module(name)
     {
-        SC_METHOD(fire);
-        dont_initialize();
     }
 
+    //void fire(unsigned int n=N,unsigned int m=M);
     void fire();
 };
 

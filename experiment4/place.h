@@ -3,16 +3,17 @@
 
 #include "placeInterface.h"
 
+template<unsigned int I=1, unsigned int O=1>
 class Place : public placeInterface
 {
 private:
     unsigned int tokens;
 
 public:
-    Place();
-    void addTokens(unsigned int) override;
-    void removeTokens(unsigned int) override;
-    unsigned int testTokens() override;
+    Place(unsigned int tokens);
+    void addTokens() override;
+    void removeTokens() override;
+    bool testTokens() override;
 
 };
 

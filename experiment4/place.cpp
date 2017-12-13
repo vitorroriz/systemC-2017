@@ -1,21 +1,25 @@
 #include "place.h"
 
-Place::Place()
+template<unsigned int I, unsigned int O>
+Place<I,O>::Place(unsigned int tokens)
 {
-    tokens = 0;
+    this->tokens = tokens;
 }
 
-void Place::addTokens(unsigned int n)
+template<unsigned int I, unsigned int O>
+void Place<I,O>::addTokens()
 {
-    tokens += n;
+    tokens = tokens + I;
 }
 
-void Place::removeTokens(unsigned int n)
+template<unsigned int I, unsigned int O>
+void Place<I,O>::removeTokens()
 {
-     tokens -= n;
+    tokens = tokens - O;
 }
 
-unsigned int Place::testTokens()
+template<unsigned int I, unsigned int O>
+bool Place<I,O>::testTokens()
 {
-    return this->tokens;
+    return this->tokens >= O? true : false;
 }
