@@ -1,8 +1,8 @@
 #include <iostream>
 #include "transition.h"
 
-template<unsigned int N, unsigned int M>
-void transition<N,M>::fire()
+template<unsigned int N, unsigned int M, unsigned int L>
+void transition<N,M,L>::fire()
 {
     bool can_fire = true;
     /*
@@ -13,6 +13,13 @@ void transition<N,M>::fire()
     for(unsigned int i = 0 ; i < N ; ++i) {
      //   std::cout << " testToken of in" << i << " = " << in[i]->testTokens() << std::endl;
         if(!in[i]->testTokens()) {
+                can_fire = false;
+                break;
+        }
+    }
+
+    for(unsigned int i = 0; i < L ; ++i) {
+        if(inhibitors[i]->testTokens()) {
                 can_fire = false;
                 break;
         }

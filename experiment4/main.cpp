@@ -6,43 +6,65 @@
 
 
 // TOPLEVEL
-SC_MODULE(toplevel)
+SC_MODULE(subnet)
 {
     public:
-    transition<1,1> ACT;
+    transition<1,1,1> ACT;
     transition<1,1> RD;
     transition<1,1> PRE;
     transition<1,1> WR;
-    Place<1,1> IDLE, ACTIVE;
-    SC_CTOR(toplevel) : ACT("ACT"), RD("RD"), PRE("PRE"), WR("WR"),
-       IDLE(1), ACTIVE(0)
+    Place<1,1>  ACTIVE;
+    SC_CTOR(subnet) : ACT("ACT"), RD("RD"), PRE("PRE"), WR("WR"),
+       ACTIVE(0)
     {
-        SC_THREAD(process);
-        ACT.in.bind(IDLE);
         ACT.out.bind(ACTIVE);
+        ACT.inhibitors.bind(ACTIVE);
         RD.in.bind(ACTIVE);
         RD.out.bind(ACTIVE);
         PRE.in.bind(ACTIVE);
-        PRE.out.bind(IDLE);
         WR.in.bind(ACTIVE);
         WR.out.bind(ACTIVE);
+    }
+};
+
+SC_MODULE(toplevel)
+{
+    public:
+    Place<1,1> IDLE;
+    subnet s1, s2;
+
+    SC_CTOR(toplevel) : IDLE(2), s1("s1"), s2("s2")
+    {
+        SC_THREAD(process);
+        s1.ACT.in.bind(IDLE);
+        s2.ACT.in.bind(IDLE);
+        s1.PRE.out.bind(IDLE);
+        s2.PRE.out.bind(IDLE);
     }
     void process() {
         while(true) {
             wait(10,SC_NS);
-            ACT.fire();
+            s1.ACT.fire();
             wait(10,SC_NS);
-            ACT.fire();
+            s1.ACT.fire();
             wait(10,SC_NS);
-            RD.fire();
+            s1.RD.fire();
             wait(10,SC_NS);
-            WR.fire();
+            s1.WR.fire();
             wait(10,SC_NS);
-            PRE.fire();
+            s1.PRE.fire();
             wait(10,SC_NS);
-            ACT.fire();
+            s1.ACT.fire();
+            wait(10,SC_NS);
+            s2.ACT.fire();
+            wait(10,SC_NS);
+            s2.ACT.fire();
+            wait(10,SC_NS);
+            s1.PRE.fire();
+            wait(10,SC_NS);
+            s2.PRE.fire();
+            wait(10,SC_NS);
             sc_stop();
-
         }
     }
 };
