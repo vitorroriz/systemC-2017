@@ -8,9 +8,9 @@ int sc_main (int __attribute__((unused)) sc_argc,
              char __attribute__((unused)) *sc_argv[])
 {
     processor cpu0("cpu0","stimuli1.txt", sc_time(1,SC_NS));
-
     // TODO ADD YOUR CODE HERE:
-
+    memory<1024> memory0("memory0");
+    cpu0.iSocket.bind(memory0.tSocket);
     std::cout << std::endl << "Name "
               << std::setfill(' ') << std::setw(10)
               << "Time" << " "
