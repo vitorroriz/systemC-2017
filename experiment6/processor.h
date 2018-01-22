@@ -10,13 +10,20 @@
 #include <systemc.h>
 #include <tlm.h>
 
+#define USE_QK
+#define QUANTUM_SIZE_NS 10000
+#ifdef USE_QK
+    #include <tlm_utils/tlm_quantumkeeper.h>
+#endif
 
 class processor : public sc_module, tlm::tlm_bw_transport_if<>
 {
   private:
     std::ifstream file;
     sc_time cycleTime;
-
+#ifdef USE_QK
+    tlm_utils::tlm_quantumkeeper quantumKeeper;
+#endif
     // Method:
     void process();
 
@@ -46,19 +53,22 @@ class processor : public sc_module, tlm::tlm_bw_transport_if<>
         SC_REPORT_FATAL(this->name(),"nb_transport_bw is not implemented");
         return tlm::TLM_ACCEPTED;
     }
-
-
 };
 processor::processor(sc_module_name,
                      std::string pathToFile,
                      sc_time cycleTime) :
     file(pathToFile), cycleTime(cycleTime)
 {
+    std::cout << "Path to file = [" << pathToFile << "]" << std::endl;
     if (!file.is_open())
         SC_REPORT_FATAL(name(), "Could not open trace");
 
-    SC_THREAD(process);
 
+    SC_THREAD(process);
+#ifdef USE_QK
+    quantumKeeper.set_global_quantum(sc_time(QUANTUM_SIZE_NS, SC_NS));
+    quantumKeeper.reset();
+#endif
     iSocket.bind(*this);
 }
 
@@ -110,11 +120,19 @@ void processor::process()
 
         if(sc_time_stamp() <= cycles * cycleTime)
         {
+#ifdef USE_QK
+            delay = cycles * cycleTime - sc_time_stamp() + quantumKeeper.get_local_time();
+#else
             delay = cycles * cycleTime - sc_time_stamp();
+#endif
         }
         else
         {
+#ifdef USE_QK
+            delay = quantumKeeper.get_local_time();
+#else
             delay = sc_time(0, SC_NS);
+#endif
         }
 
         trans.set_address(address);
@@ -123,7 +141,14 @@ void processor::process()
         trans.set_data_ptr(data);
         iSocket->b_transport(trans, delay);
 
+#ifdef USE_QK
+        quantumKeeper.set(delay); //Anotate the time of the target
+//        quantumKeeper.inc(sc_time(CPU_COMPUTATION_TIME, SC_NS));
+        if(quantumKeeper.need_sync())
+            quantumKeeper.sync();
+#else
         wait(delay);
+#endif
 
         std::cout << std::setfill(' ') << std::setw(4)
                   << name() << " "

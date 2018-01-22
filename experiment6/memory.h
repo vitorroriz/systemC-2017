@@ -30,11 +30,12 @@ public:
            SC_REPORT_FATAL(this->name(), "Memory address out or range");
            return;
        }
-
+/*
        if (trans.get_data_length() != 1) {
            trans.set_response_status(tlm::TLM_ADDRESS_ERROR_RESPONSE);
            SC_REPORT_FATAL(this->name(), "Memory word is 1 byte long, data length = sizeof(char)");
        }
+*/
        if (trans.get_command() == tlm::TLM_WRITE_COMMAND) {
            memcpy(&mem[trans.get_address()],
                   trans.get_data_ptr(),
